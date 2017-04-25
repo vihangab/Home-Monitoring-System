@@ -22,17 +22,20 @@
 #include "em_gpio.h"
 #include "em_i2c.h"
 #include "em_leuart.h"
-#include "em_lesense.h"
 #include "em_core.h"
 #include "em_pcnt.h"
 #include "em_prs.h"
 #include "dmactrl.c"
 #include "em_assert.h"
-#include "lightsense_conf.h"
 #include "circularbuff.h"
 #include "gesturei2c.h"
 #include "string.h"
 #include "leuartdma.h"
+#include "capsense.h"
+#include "em_lesense.h"
+#include "em_rtc.h"
+//#include "em_rtc.h"
+#include "em_dac.h"
 
 #define EM0 0
 #define EM1 1
@@ -70,8 +73,8 @@
 #define ADCSAMPLES                  500
 volatile uint16_t 					ramBufferAdcData[ADCSAMPLES];
 #define DMA_CHANNEL_ADC       		0
-#define LOWER_TEMP					15
-#define UPPER_TEMP					35
+//#define LOWER_TEMP					15
+//#define UPPER_TEMP					20
 #define DMA_off					//uncomment this to switch off the DMA for ADC
 #define ADC_Freq					1280000
 #define HFPER_Freq					0			//set to 0 to use default HFPER clock frequency i.e 14 Mhz as timebase
@@ -123,10 +126,15 @@ volatile uint16_t 					ramBufferAdcData[ADCSAMPLES];
 #define CIRCULAR_BUFFER_TEST		0
 #define DMA_CHANNEL_LEUART0			0
 
+/* Bitmask for the currently touched channels */
+  uint16_t channels_touched;
 
 //#define CIRCULAR_BUFFER
 int state_light;
 //#define ONBOARD_LIGHT_SENSOR
+
+int temp_low;
+int temp_high;
 
 #endif
 

@@ -11,6 +11,10 @@ int main(void)
 {
 	CHIP_Init();													//* Chip errata
 
+	temp_high = 35;
+	temp_low = 15;
+	channels_touched = 0;
+	float sensitivity[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0};
 	Systemtick();
 	GPIO_setup(); 													//* GPIO set up - Enable to port E, 2,3 from gpio, which is connected to LED0,
 														//ADC setup function
@@ -21,6 +25,11 @@ int main(void)
 	setupDma();
 	WIFI_Connect();
 	setup_ADC();
+	/* Init Capacitive touch for channels configured in sensitivity array */
+	LETOUCH_Init(sensitivity);
+	/* If any channels are touched while starting, the calibration will not be correct. */
+	  /* Wait while channels are touched to be sure we continue in a calibrated state. */
+	  while(LETOUCH_GetChannelsTouched() != 0);
 	LETIMER_setup();											    //* LETIMER setup function
 	#ifdef LEUART_ENABLE
 	//LEUART_setup();

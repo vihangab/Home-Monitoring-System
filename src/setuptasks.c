@@ -543,7 +543,7 @@ void transferComplete(unsigned int channel, bool primary, void *user)
 		//sum = sum / ADCSAMPLES;
 
 		temp_increment = convertToCelsius((float)sum / ADCSAMPLES);
-		if ((temp_increment < LOWER_TEMP ) || (temp_increment > UPPER_TEMP))
+		if ((temp_increment < temp_low ) || (temp_increment > temp_high))
 		{
 
 			LED1_on();
@@ -741,40 +741,59 @@ void ADC0_IRQHandler(void)
 			unblock_sleep_mode(EM1);               	// Unblocking ADC from EM1
 			ADC0->CMD |= ADC_CMD_SINGLESTOP;        // Stopping the ADC0
 			//sum = sum / ADCSAMPLES;
-			temp_increment = convertToCelsius((float)sum / ADCSAMPLES);  	//
+			temp_increment = convertToCelsius((float)(sum / ADCSAMPLES));  	//
 			//SendToSamb11();
 			sum = 0;
 			adcsamplecount = 0;
-			if ((temp_increment < LOWER_TEMP ) || (temp_increment > UPPER_TEMP))
+			if ((temp_increment < temp_low) || (temp_increment > temp_high))
 			{
 
 				LED1_on();
+				strcpy(command,"AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
+
+				strcpy(command,"AT+CIPSEND=4,83\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
+
+				strcpy(command,"GET /apps/thingtweet/1/statuses/update?api_key=GCYQQHMLYUSOD8RP&status=Emergency!\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
+
 			}
 			else
 			{
 
 				LED1_off();
+				strcpy(command,"AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
+
+				strcpy(command,"AT+CIPSEND=4,44\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
+
+				strcpy(command,"GET /update?key=B8DV0508B859SGNR&field1=");
+				sprintf(str,"%d",(int8_t)temp_increment);
+				strcat(command,str);
+				strcat(command,"\r\n");
+				command_size = strlen(command);
+				Send_Command();
+
+				wait();
 			}
-			strcpy(command,"AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
-			command_size = strlen(command);
-			Send_Command();
 
-			wait();
-
-			strcpy(command,"AT+CIPSEND=4,44\r\n");
-			command_size = strlen(command);
-			Send_Command();
-
-			wait();
-
-			strcpy(command,"GET /update?key=B8DV0508B859SGNR&field1=");
-			sprintf(str,"%d",(int8_t)temp_increment);
-			strcat(command,str);
-			strcat(command,"\r\n");
-			command_size = strlen(command);
-			Send_Command();
-
-			wait();
 		}
 		adcsamplecount++;
 
