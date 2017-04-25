@@ -147,6 +147,7 @@ void Wifi_Join()
     Send_Command();
     wait();
     wait();
+    wait();
 }
 
 void Wifi_SetMultiple()
@@ -172,5 +173,5 @@ void Send_Command()
 
 void wait()
 {
-    for(int i=0;i<5000000;i++);
+    for(int i=0;i<2000000;i++);
 }

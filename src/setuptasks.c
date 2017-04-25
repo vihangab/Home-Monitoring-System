@@ -770,7 +770,6 @@ void ADC0_IRQHandler(void)
 			}
 			else
 			{
-
 				LED1_off();
 				strcpy(command,"AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
 				command_size = strlen(command);
@@ -792,8 +791,8 @@ void ADC0_IRQHandler(void)
 				Send_Command();
 
 				wait();
-			}
 
+			}
 		}
 		adcsamplecount++;
 

@@ -42,7 +42,7 @@
 #define EM2 2
 #define EM3 3
 #define EM_RESTORE 	1
-#define TIME_PERIOD 6.75 					// TO excite ambient light sensor every TIME_PERIOD seconds
+#define TIME_PERIOD 20 					// TO excite ambient light sensor every TIME_PERIOD seconds
 #define ON_TIME 	0.004  						// time to excite light sensor and get voltage reading - 4 msec
 #define ENABLE_CALLIBRATION 1
 
